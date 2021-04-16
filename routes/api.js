@@ -48,16 +48,26 @@ router.post("/workouts", async function(req, res){
 });
 
 // /api/workouts/range
-// router.get("/workouts/range", async function(req, res){
-//     try {
-//       Workout.find({})
-//       .sort({'date': -1})
-//       .limit(7)
-//     }catch (err) {
-//         console.log(err);
-//         res.status(500).send(err);
+router.get("/workouts/range", async function(req, res){
+    try {
+      const data = await Workout.aggregate([
+        {
+          $addFields: {
+            totalDuration: {
+              $sum: "$exercises.duration",
+            },
+          },
+        },
+      ])
+      .sort({'_id': -1})
+      .limit(7)
+      console.log(data)
+      res.json(data);
+    }catch (err) {
+        console.log(err);
+        res.status(500).send(err);
 
-// });
+}});
 
 module.exports = router;
 

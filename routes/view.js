@@ -1,18 +1,17 @@
 const router = require("express").Router();
 const path = require("path");
-const viewDir = path.join(__dirname, "../views");
+const viewDir = path.join(__dirname, "../public/views");
 
 router.get("/", function(req, res) {
     res.sendFile(path.join(viewDir, "index.html"));
 
 });
 
-router.post("/exercise", function(req, res) {
+router.get("/exercise", function(req, res) {
     res.sendFile(path.join(viewDir, "exercise.html"));
-    res.json(workout)
 });
 
-router.post("/stats", function(req, res) {
+router.get("/stats", function(req, res) {
     res.sendFile(path.join(viewDir, "stats.html"));
 });
 
