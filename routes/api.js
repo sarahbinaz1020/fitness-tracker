@@ -22,29 +22,24 @@ router.get("/workouts", async function (req, res) {
 
 // /api/workouts/:id
 router.put("/workouts/:id", async function(req, res){
-    try{
-        const data = await Workout.updateOne(req.body, {
-            where: {
-                id: req.params.id,
-            },
-        })
-        res.json(data);
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-      }
+  const data = await Workout.updateOne({_id: req.params.id }, {
+    $push: {
+      exercises: req.body,
+    },
+  }).catch((err) => res.json(err));
+  res.json(data);
     
 });
 
 // /api/workouts
-router.post("/workouts", async function(req, res){
-    try {
-        const data = await Workout.create(req.body);
-        res.json(data);
-    }catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-      }
+router.post("/workouts", ({ body }, res) => {
+  Workout.create(body)
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
 });
 
 // /api/workouts/range
